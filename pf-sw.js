@@ -41,6 +41,7 @@ function updatePushStatus(data) {
 		})
 		.then((res) => {
 			if (res.success) {
+				console.log("status updated: ", data);
 			}
 		})
 		.catch((err) => {
@@ -66,6 +67,8 @@ async function pushShowNotification(event) {
 		click_id: payload.data.click_id,
 		event_type: "displayed",
 	};
+	
+	console.log("displayed: ", ji_pushOBJ.ep);
 
 	await updatePushStatus(req_param);
 }
@@ -92,6 +95,8 @@ async function pushClickNotification(event) {
 		click_id: clickID,
 		event_type: "clicked",
 	};
+	
+	console.log("clicked: ", ji_pushOBJ.ep);
 
 	await updatePushStatus(req_param);
 }
