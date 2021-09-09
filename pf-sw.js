@@ -41,7 +41,6 @@ function updatePushStatus(data) {
 		})
 		.then((res) => {
 			if (res.success) {
-				console.log("status updated: ", data);
 			}
 		})
 		.catch((err) => {
@@ -55,20 +54,18 @@ async function pushShowNotification(event) {
 	let payload = event.data.json();
 
 	// Set push data to global variable to be used for other events
+	ji_pushOBJ.ep = payload.data.endpoint;
 	ji_pushOBJ.id = payload.data.id;
 	ji_pushOBJ.url = payload.data.url;
 	ji_pushOBJ.click_id = payload.data.click_id;
 
 	await self.registration.showNotification(payload.title, payload);
 
-	const req_param = {
-		endpoint: ji_pushOBJ.ep,
-		notification_id: payload.data.id,
-		click_id: payload.data.click_id,
-		event_type: "displayed",
-	};
-	
-	console.log("displayed: ", ji_pushOBJ.ep);
+	let req_param = payload.data;
+	req_param.endpoint = ji_pushOBJ.ep;
+	req_param.notification_id = ji_pushOBJ.id;
+	req_param.click_id = ji_pushOBJ.click_id;
+	req_param.event_type = "displayed";
 
 	await updatePushStatus(req_param);
 }
@@ -82,6 +79,9 @@ async function pushClickNotification(event) {
 	var pushID = event.notification.data.id
 		? event.notification.data.id
 		: ji_pushOBJ.id;
+	var endpoint = event.notification.data.endpoint
+		? event.notification.data.endpoint
+		: ji_pushOBJ.ep;
 	var clickID = event.notification.data.click_id
 		? event.notification.data.click_id
 		: ji_pushOBJ.click_id;
@@ -89,14 +89,11 @@ async function pushClickNotification(event) {
 	// Open the url in new tab
 	clients.openWindow(pushURL);
 
-	const req_param = {
-		endpoint: ji_pushOBJ.ep,
-		notification_id: pushID,
-		click_id: clickID,
-		event_type: "clicked",
-	};
-	
-	console.log("clicked: ", ji_pushOBJ.ep);
+	let req_param = event.notification.data;
+	req_param.endpoint = endpoint;
+	req_param.notification_id = pushID;
+	req_param.click_id = clickID;
+	req_param.event_type = "clicked";
 
 	await updatePushStatus(req_param);
 }
@@ -147,7 +144,10 @@ self.addEventListener("pushsubscriptionchange", function (event) {
 						};
 						getREQ.onsuccess = function (event) {
 							// Do something with the request.result!
-							var endpoint = getREQ.result.value;
+							var endpoint =
+								ji_pushOBJ.ep !== ""
+									? ji_pushOBJ.ep
+									: getREQ.result.value;
 							if (endpoint !== "" && endpoint !== null) {
 								const req_param = {
 									endpoint: endpoint,
