@@ -28,7 +28,7 @@ self.addEventListener("message", function (event) {
 
 // Callback for updating push status
 function updatePushStatus(data) {
-	console.log('Update Status: ', data);
+	console.log('Update Status: ', JSON.stringify(data));
 	fetch(baseURL + "/api/push/update-status", {
 		method: "POST",
 		body: JSON.stringify(data),
@@ -38,11 +38,7 @@ function updatePushStatus(data) {
 		},
 	})
 		.then((res) => {
-			return res.json();
-		})
-		.then((res) => {
-			if (res.success) {
-			}
+			// return res.json();
 		})
 		.catch((err) => {
 			console.log(err);
