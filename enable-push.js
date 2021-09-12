@@ -278,6 +278,7 @@ var checkRemotePermission = function(permissionData) {
         // The web service URL is a valid push provider, and the user said yes.
         // permissionData.deviceToken is now available to use.
     }
+    console.log(permissionData);
 };
 
 /**
