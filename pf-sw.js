@@ -28,6 +28,7 @@ self.addEventListener("message", function (event) {
 
 // Callback for updating push status
 function updatePushStatus(data) {
+	console.log('Update Status: ', data);
 	fetch(baseURL + "/api/push/update-status", {
 		method: "POST",
 		body: JSON.stringify(data),
