@@ -255,6 +255,7 @@ function getNotificationPermission() {
             subscribeUser();
         });
     } else if (pushType === "apn") {
+        console.log("Safari push permission.");
         var permissionData = window.safari.pushNotification.permission(aPushId);
         checkRemotePermission(permissionData);
     }
