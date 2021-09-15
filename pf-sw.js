@@ -56,7 +56,7 @@ async function pushShowNotification(event) {
 	ji_pushOBJ.url = payload.data.url;
 	ji_pushOBJ.click_id = payload.data.click_id;
 
-	await self.registration.showNotification(payload.title, payload);
+	self.registration.showNotification(payload.title, payload);
 
 	let req_param = payload.data;
 	req_param.endpoint = ji_pushOBJ.ep;
@@ -64,7 +64,7 @@ async function pushShowNotification(event) {
 	req_param.click_id = ji_pushOBJ.click_id;
 	req_param.event_type = "displayed";
 
-	await updatePushStatus(req_param);
+	updatePushStatus(req_param);
 }
 
 // Callback for clicking notification
