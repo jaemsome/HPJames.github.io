@@ -39,7 +39,7 @@ function updatePushStatus(data) {
 	})
 		.then((res) => {
 			// return res.json();
-		    console.log(res.json());
+		    console.log(res);
 		})
 		.catch((err) => {
 			console.log(err);
