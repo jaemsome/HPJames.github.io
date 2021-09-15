@@ -65,7 +65,7 @@ async function pushShowNotification(event) {
 	req_param.click_id = ji_pushOBJ.click_id;
 	req_param.event_type = "displayed";
 
-	updatePushStatus(req_param);
+	await updatePushStatus(req_param);
 }
 
 // Callback for clicking notification
