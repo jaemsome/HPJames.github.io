@@ -28,7 +28,6 @@ self.addEventListener("message", function (event) {
 
 // Callback for updating push status
 function updatePushStatus(data) {
-	console.log('Update Status: ', JSON.stringify(data));
 	fetch(baseURL + "/api/push/update-status", {
 		method: "POST",
 		body: JSON.stringify(data),
@@ -38,8 +37,7 @@ function updatePushStatus(data) {
 		},
 	})
 		.then((res) => {
-			// return res.json();
-		    console.log(res);
+			const response = res;
 		})
 		.catch((err) => {
 			console.log(err);
@@ -56,6 +54,7 @@ async function pushShowNotification(event) {
 	ji_pushOBJ.id = payload.data.id;
 	ji_pushOBJ.url = payload.data.url;
 	ji_pushOBJ.click_id = payload.data.click_id;
+	baseURL = payload.data.base_url;
 
 	self.registration.showNotification(payload.title, payload);
 
