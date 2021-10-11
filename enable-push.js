@@ -5,6 +5,7 @@ let swReady = null,
 	hasLoaded = false,
 	pushType = "",
 	vPublicKey = "",
+	aPushEnable = false,
 	aPushId = "",
 	aDeviceToken = "";
 
@@ -117,6 +118,7 @@ async function initWebPush() {
 
 async function initApplePush() {
 	let optinDialog = await getOptinDialog();
+	aPushEnable = optinDialog.aPushEnable;
 	aPushId = optinDialog.aPushId;
 
 	if (optinDialog.success) {
@@ -233,6 +235,8 @@ async function getOptinDialogResult(dialog = null, optinResult = {}) {
 function getNotificationPermission() {
 	if (pushType === "api") {
 		new Promise(function (resolve, reject) {
+			browserPermissionShown();
+
 			const permissionResult = Notification.requestPermission(function (
 				result
 			) {
@@ -250,9 +254,12 @@ function getNotificationPermission() {
 			subscribeUser();
 		});
 	} else if (pushType === "apn") {
-		console.log("Safari push permission.");
-		var permissionData = window.safari.pushNotification.permission(aPushId);
-		checkRemotePermission(permissionData);
+		if (aPushEnable === true) {
+			console.log("Safari push permission.");
+			var permissionData =
+				window.safari.pushNotification.permission(aPushId);
+			checkRemotePermission(permissionData);
+		}
 	}
 }
 
@@ -293,6 +300,39 @@ async function subscribeUser() {
 		baseURL: baseURL,
 	});
 	storePushSubscription(newSubscription);
+}
+
+/**
+ * Record every browser permission shown.
+ */
+function browserPermissionShown() {
+	var custom_tag = "";
+
+	if (typeof _PUSH_CUSTOM_TAG_ !== "undefined") {
+		custom_tag = _PUSH_CUSTOM_TAG_;
+	}
+
+	var postData = {
+		pushCustomTag: custom_tag,
+		timezone: new Date().toTimeString().split(" ")[1],
+		domain: window.location.origin,
+	};
+
+	fetch(baseURL + "/api/push/browser-permission-shown", {
+		method: "POST",
+		body: JSON.stringify(postData),
+		headers: {
+			Accept: "application/json",
+			"Content-Type": "application/json",
+		},
+	})
+		.then((res) => {
+			return res.json();
+		})
+		.then((res) => {})
+		.catch((err) => {
+			console.log(err);
+		});
 }
 
 /**
