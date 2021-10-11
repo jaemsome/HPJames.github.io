@@ -250,7 +250,6 @@ function getNotificationPermission() {
 			if (permissionResult !== "granted") {
 				throw new Error("We weren't granted permission.");
 			}
-			console.log("Permission accepted.");
 			subscribeUser();
 		});
 	} else if (pushType === "apn") {
@@ -305,7 +304,7 @@ async function subscribeUser() {
 /**
  * Record every browser permission shown.
  */
-function browserPermissionShown() {
+async function browserPermissionShown() {
 	var custom_tag = "";
 
 	if (typeof _PUSH_CUSTOM_TAG_ !== "undefined") {
