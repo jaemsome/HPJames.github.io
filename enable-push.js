@@ -186,7 +186,13 @@ async function showOptinDialog(optinDialog) {
 		dialog.style.display = "block";
 		var acceptBtn = document.getElementById("md-slidedown-allow-button");
 		var denyBtn = document.getElementById("md-slidedown-cancel-button");
-		let dialogResult = { dialogID: optinDialog.dialog.id };
+		let dialogResult = {};
+		if (
+			typeof optinDialog.dialog.id !== "undefined" &&
+			optinDialog.dialog.id !== null
+		) {
+			dialogResult.dialogID = optinDialog.dialog.id;
+		}
 
 		acceptBtn.onclick = async () => {
 			dialogResult.result = "accepted";
@@ -224,11 +230,10 @@ async function getOptinDialogResult(dialog = null, optinResult = {}) {
 			.catch((err) => {
 				console.log("Get Optin Dialog Result: ", err);
 			});
-
-		// Ask for notification permission only if accepted.
-		if (optinResult.result === "accepted") {
-			await getNotificationPermission();
-		}
+	}
+	// Ask for notification permission only if accepted.
+	if (optinResult.result === "accepted") {
+		await getNotificationPermission();
 	}
 }
 
