@@ -78,7 +78,7 @@ async function initSW() {
 
 		// register the service worker
 		await navigator.serviceWorker
-			.register(window.location.origin + "/pf-sw.js")
+			.register(window.location.origin + "/test_pf-sw.js")
 			.then(() => {
 				initWebPush();
 			})
